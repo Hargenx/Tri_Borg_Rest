@@ -21,7 +21,7 @@ var tarefas = []Tarefa{
 	{ID: 2, Titulo: "Fazer compras", Feito: false},
 }
 
-func pegaTarefa(w http.ResponseWriter, r *http.Request) {
+func pegaTarefas(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(tarefas)
 }
 
@@ -34,7 +34,7 @@ func criaTarefa(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newtarefa)
 }
 
-func pegaTarefas(w http.ResponseWriter, r *http.Request) {
+func pegaTarefa(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	tarefaID, _ := strconv.Atoi(params["tarefaID"])
 	for _, tarefa := range tarefas {
@@ -54,7 +54,6 @@ func atualizaTarefa(w http.ResponseWriter, r *http.Request) {
 		if tarefa.ID == tarefaID {
 			var updatedtarefa Tarefa
 			_ = json.NewDecoder(r.Body).Decode(&updatedtarefa)
-			tarefas[index].Titulo = updatedtarefa.Titulo
 			tarefas[index].Feito = updatedtarefa.Feito
 			json.NewEncoder(w).Encode(tarefas[index])
 			return
@@ -82,7 +81,7 @@ func main() {
 
 	router.HandleFunc("/tarefas", pegaTarefas).Methods("GET")
 	router.HandleFunc("/tarefas", criaTarefa).Methods("POST")
-	router.HandleFunc("/tarefas/{tarefaID}", pegaTarefas).Methods("GET")
+	router.HandleFunc("/tarefas/{tarefaID}", pegaTarefa).Methods("GET")
 	router.HandleFunc("/tarefas/{tarefaID}", atualizaTarefa).Methods("PUT")
 	router.HandleFunc("/tarefas/{tarefaID}", apagaTarefa).Methods("DELETE")
 
