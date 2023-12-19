@@ -9,11 +9,11 @@ def get_api_key():
 API_KEY = get_api_key()
 def get_weather(city):
     try:
-        response = requests.get(f'http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}')
-        weather_data = response.json()
-        print(f'Clima em {city}:')
-        print(f'Temperatura: {weather_data["main"]["temp"]}°C')
-        print(f'Descrição: {weather_data["weather"][0]["description"]}')
+        resposta = requests.get(f'http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={API_KEY}')
+        dados = resposta.json()
+        print(f'Clima -> {city}:')
+        print(f'Temperatura: {dados["main"]["temp"]}°C')
+        print(f'Descrição: {dados["weather"][0]["description"]}')
     except requests.RequestException as e:
         print('Erro ao obter informações meteorológicas:', e)
 
