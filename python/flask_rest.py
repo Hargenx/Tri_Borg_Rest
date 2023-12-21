@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS #pip install -U flask-cors
 
 app = Flask(__name__)
+CORS(app)
 
 tarefas = [
     {'id': 1, 'titulo': 'Estudar Python', 'feito': False},

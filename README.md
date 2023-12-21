@@ -60,6 +60,7 @@ Este repositório contém exemplos de implementações simples de comunicação 
 - **Instruções de Uso:**
   - Necessário:
       - pip install flask
+      - pip install -U flask-cors
   - Execute o servidor: `python flask_rest.py`
   - Utilize o Insomnia para testar as operações CRUD:
     - Criar: POST `http://localhost:5000/tarefas`
