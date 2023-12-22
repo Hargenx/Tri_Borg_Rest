@@ -4,25 +4,29 @@ from flask_cors import CORS #pip install -U flask-cors
 app = Flask(__name__)
 CORS(app)
 
-tarefas = [
-    {'id': 1, 'titulo': 'Estudar Python', 'feito': False},
+'''tarefas = [
+    {'id': 1, 'titulo': 'Estudar Python', 'feito': True},
     {'id': 2, 'titulo': 'Fazer compras', 'feito': False}
-]
+]'''
 
-@app.route('/tarefas', methods=['GET'])
-def busca_tarefas():
-    return jsonify({'tarefas': tarefas})
+tarefas = []
 
+import uuid
 @app.route('/tarefas', methods=['POST'])
 def inclui_tarefa():
     try:
-        nova_tarefa = {'id': len(tarefas) + 1, 'titulo': request.json['titulo'], 'feito': False}
+        novo_id = str(uuid.uuid4())  # Gera um UUID único
+        nova_tarefa = {'id': novo_id, 'titulo': request.json['titulo'], 'feito': False}
         tarefas.append(nova_tarefa)
         return jsonify({'tarefa_incluida': nova_tarefa}), 201
     except KeyError:
         return jsonify({'error': 'Titulo da tarefa é obrigatório.'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/tarefas', methods=['GET'])
+def busca_tarefas():
+    return jsonify({'tarefas': tarefas})
 
 @app.route('/tarefas/<int:tarefa_id>', methods=['GET'])
 def busca_tarefa(tarefa_id):
