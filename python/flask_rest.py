@@ -25,7 +25,7 @@ def busca_tarefas():
     return jsonify({'tarefas': tarefas})
 
 @app.route('/tarefas/<uuid:tarefa_id>', methods=['GET'])
-def busca_tarefa(tarefa_id):
+def busca_tarefa_id(tarefa_id):
     try:
         global tarefas
         tarefa_id_str = str(tarefa_id)
@@ -35,6 +35,19 @@ def busca_tarefa(tarefa_id):
         return jsonify({'message': 'Tarefa não encontrada'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/tarefas/<nome_tarefa>', methods=['GET'])
+def busca_tarefa_por_nome(nome_tarefa):
+    try:
+        global tarefas
+        tarefa_encontrada = next((tarefa for tarefa in tarefas if tarefa['titulo'] == nome_tarefa), None)
+        if tarefa_encontrada:
+            return jsonify({'tarefa': tarefa_encontrada})
+        return jsonify({'message': 'Tarefa não encontrada'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/tarefas/<uuid:tarefa_id>', methods=['PUT'])
 def atualiza_tarefa(tarefa_id):
