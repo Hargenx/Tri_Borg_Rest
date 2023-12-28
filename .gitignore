@@ -4,3 +4,4 @@ go.work
 go.mod
 go.sum
 node_modules
+__pycache__

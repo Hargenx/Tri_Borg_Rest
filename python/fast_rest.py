@@ -4,7 +4,16 @@ from fastapi import FastAPI, HTTPException
 from typing import List, Optional
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from typing import Union
 
+
+class Tarefas(BaseModel):
+    id: str = str(uuid.uuid4())
+    titulo: str
+    feito: Union[bool, None] = False
+
+    
 app = FastAPI()
 
 origins = ["*",
@@ -42,6 +51,9 @@ async def incluir_tarefa(titulo: str) -> dict:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/tarefas_json")
+async def create_item(tarefas: Tarefas):
+    return tarefas
 
 @app.get('/tarefas/{tarefa_id}', response_model=dict)
 async def busca_tarefa(tarefa_id: str):
@@ -55,7 +67,7 @@ async def busca_tarefa(tarefa_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.put('/tarefas/{tarefa_id}', response_model=dict)
-async def atualiza_tarefa(tarefa_id: int, titulo: Optional[str] = None, feito: Optional[bool] = None):
+async def atualiza_tarefa(tarefa_id: str, titulo: Optional[str] = None, feito: Optional[bool] = None):
     try:
         print(f"Atualizando tarefa com ID: {tarefa_id}")
         for tarefa in tarefas:
@@ -64,6 +76,21 @@ async def atualiza_tarefa(tarefa_id: int, titulo: Optional[str] = None, feito: O
                     tarefa['titulo'] = titulo
                 if feito is not None:
                     tarefa['feito'] = feito
+                return {'Tarefa_alterada': tarefa}
+        raise HTTPException(status_code=404, detail='Tarefa não encontrada')
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.put('/tarefas_json/{Tarefa.titulo}', response_model=dict)
+async def atualiza_tarefa_json(tarefa: Tarefas):
+    try:
+        print(f"Atualizando tarefa: {tarefa.titulo}")
+        for tarefa in tarefas:
+            if tarefa['titulo'] == tarefa.titulo:
+                if tarefa.titulo:
+                    tarefa['titulo'] = tarefa.titulo
+                if tarefa.feito is not None:
+                    tarefa['feito'] = tarefa.feito
                 return {'Tarefa_alterada': tarefa}
         raise HTTPException(status_code=404, detail='Tarefa não encontrada')
     except Exception as e:
